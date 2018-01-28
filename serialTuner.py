@@ -9,12 +9,12 @@ import datetime as dt
 window = tk.Tk()
 window.title('SerialTuner')
 window.geometry('900x500')
-version = '1.2.02'
+version = '1.2.03'
 
 logo = tk.PhotoImage(file="logo.gif")
 
 w1 = tk.Label(window, image=logo).place(x=35,y=360)
-tk.Label(window,text= version,font=('Arial,2')).place(x=35,y=465)
+tk.Label(window,text= 'Version: ' + version,font=('Arial,2')).place(x=25,y=465)
 
 #====================Serial Connection====================
 sp = sc.serialPort()

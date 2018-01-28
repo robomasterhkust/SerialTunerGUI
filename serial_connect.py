@@ -79,13 +79,15 @@ class serialPort:
         byte1 =  self._ser.read(1)
         byte2 =  self._ser.read(1)
         byte_private = self._ser.read(4)
-        private = st.unpack('I',byte_private)[0]
-        for i in range(0,32):
-            self._private_flag.append((private & pow(2,i) > 0))
 
         if len(byte1) == 0:
             print 'Unable to retrieve parameters from board!'
             return False;
+            
+        private = st.unpack('I',byte_private)[0]
+        for i in range(0,32):
+            self._private_flag.append((private & pow(2,i) > 0))
+
 
         self.param_count = (st.unpack('B',byte1))[0]
         self._subparam_count = (st.unpack('B',byte2))[0]
