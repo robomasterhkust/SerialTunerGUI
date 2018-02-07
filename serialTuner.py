@@ -9,18 +9,15 @@ import datetime as dt
 window = tk.Tk()
 window.title('SerialTuner')
 window.geometry('900x500')
-version = '1.3.01'
-print '=== ENTERPRIZE Serial Tuner Ver ' + version +' ==='
-
-min_supported_version_embedded = '1.3.01' #'param.c' before this version is not supported
+version = '1.2.02.pluros'
 
 logo = tk.PhotoImage(file="logo.gif")
 
 w1 = tk.Label(window, image=logo).place(x=35,y=360)
-tk.Label(window,text= 'Version: ' + version,font=('Arial,2')).place(x=25,y=465)
+tk.Label(window,text= version,font=('Arial,2')).place(x=35,y=465)
 
 #====================Serial Connection====================
-sp = sc.serialPort(min_supported_version_embedded)
+sp = sc.serialPort()
 tk.Label(window,text='Enter Serial Port Name:',font=('Arial,8')).place(x=10,y=10)
 eserialName = tk.Entry(window, width = 15, borderwidth = 2,font=('Arial,8'))
 eserialName.place(x=210,y=8)
@@ -335,7 +332,7 @@ def LoadToDevice(f,paramList):
                 except ValueError:
                     print 'W: Parameter \"'+param.name+'\" (Num:'+str(tempParamList[index].index)+') missing sub-param in file'
         except ValueError:
-            print 'W: Parameter \"'+param.name+'\" (Num:'+str(param.index)+') not found in file'
+            print 'W: Parameter \"'+param.name+'\" (Num:'+str(tempParamList[index].index)+') not found in file'
         clearScale()
 
 def inputYes2():
@@ -385,10 +382,30 @@ bsave.place(x=632,y=455)
 bload = tk.Button(window,text = 'Load to device',command = paramLoad,
     width = 10, height = 1,font=('Arial,6'))
 bload.place(x=765,y=455)
+#======================ROS and test========================
+ROS_exist=False
+try :
+    import test as tt
+    ROS_exist=True
+    test_running=False
+    pubList=[]
+except ImportError:
+    print "It seems that you have not installed ROS"
+
+def testHandler():
+    global pubList, ROS_exist, test_running
+    test_running=tt.testStart(sp,paramList,pubList,test_running)
+
+if ROS_exist:
+    btest = tk.Button(window,text = 'Test Switch', command = testHandler,
+        width = 10, height = 1,font=('Arial,6'))
+    btest.place(x=765,y=200)
 #========================Main loop=========================
 while True:
     scale_update()
     serialPort_update(sp)
     window.update_idletasks()
     window.update()
+    if ROS_exist:
+	tt.test_pub(paramList,pubList,test_running)
     time.sleep(0.075)
