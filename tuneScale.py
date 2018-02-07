@@ -29,6 +29,11 @@ class tuneScale:
         self.sPVar = sPVar
         self.sPPow = sPPow
 
+        if self.sPPow > 20:
+            self.sPPow = 20
+        if self.sPPow < -12:
+            self.sPPow = -12
+
         self.sPDiv = pow(10,self.sPPow)
 
         self.sPInt = self.sPDiv*5
@@ -38,10 +43,11 @@ class tuneScale:
         self.sPMax = sPVar + self.sPInt
 
     def magnify(self):
-        if self.sPDiv > 1e+30:
+        Pow = self.sPPow + 1
+        if Pow > 20:
             return
 
-        self.sPPow = self.sPPow + 1
+        self.sPPow = Pow
         self.sPDiv = self.sPDiv * 10.0
         self.sPInt = self.sPDiv*5
         self.sPRes = self.sPDiv/100
@@ -50,10 +56,11 @@ class tuneScale:
         self.scaleChanged = True
 
     def shrink(self):
-        if self.sPDiv < 1e-12:
+        Pow = self.sPPow - 1
+        if Pow < -12:
             return
 
-        self.sPPow = self.sPPow - 1
+        self.sPPow = Pow
         self.sPDiv = self.sPDiv / 10.0
         self.sPInt = self.sPDiv*5
         self.sPRes = self.sPDiv/100

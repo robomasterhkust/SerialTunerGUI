@@ -9,7 +9,10 @@ import datetime as dt
 window = tk.Tk()
 window.title('SerialTuner')
 window.geometry('900x500')
-version = '1.2.03'
+version = '1.3.01'
+print '=== ENTERPRIZE Serial Tuner Ver ' + version +' ==='
+
+min_supported_version_embedded = '1.3.01' #'param.c' before this version is not supported
 
 logo = tk.PhotoImage(file="logo.gif")
 
@@ -17,7 +20,7 @@ w1 = tk.Label(window, image=logo).place(x=35,y=360)
 tk.Label(window,text= 'Version: ' + version,font=('Arial,2')).place(x=25,y=465)
 
 #====================Serial Connection====================
-sp = sc.serialPort()
+sp = sc.serialPort(min_supported_version_embedded)
 tk.Label(window,text='Enter Serial Port Name:',font=('Arial,8')).place(x=10,y=10)
 eserialName = tk.Entry(window, width = 15, borderwidth = 2,font=('Arial,8'))
 eserialName.place(x=210,y=8)
@@ -332,7 +335,7 @@ def LoadToDevice(f,paramList):
                 except ValueError:
                     print 'W: Parameter \"'+param.name+'\" (Num:'+str(tempParamList[index].index)+') missing sub-param in file'
         except ValueError:
-            print 'W: Parameter \"'+param.name+'\" (Num:'+str(tempParamList[index].index)+') not found in file'
+            print 'W: Parameter \"'+param.name+'\" (Num:'+str(param.index)+') not found in file'
         clearScale()
 
 def inputYes2():
